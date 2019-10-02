@@ -18,179 +18,181 @@
  */
 
 bool isEmpty(PriorityQueue *pqueue){
-  struct PQNode *head = pqueue -> head;
-  struct PQNode **tails = pqueue -> tails;
-
-  if (head != NULL){
-    return false;
-  }
+    struct PQNode *head = pqueue -> head;
+    struct PQNode **tails = pqueue -> tails;
   
-  for (int entry = 0; entry <= pqueue -> nprios - 1; entry++){
-    if (tails[entry] != NULL){
-      return false;
+    if (head != NULL){
+        return false;
     }
-  }
+  
+    for (int entry = 0; entry <= pqueue -> nprios - 1; entry++){
+        if (tails[entry] != NULL){
+            return false;
+        }
+    }
 
-  return true;
+    return true;
 }
 
 bool sortCheck(PriorityQueue *pqueue){
-  struct PQNode *currentNode = pqueue -> head;
-  struct PQNode *nextNode = currentNode -> next;
-  int priority = currentNode -> priority;
+    struct PQNode *currentNode = pqueue -> head;
+    struct PQNode *nextNode = currentNode -> next;
+    int priority = currentNode -> priority;
 
-  while (nextNode != NULL){
-    int nextPriority = nextNode -> priority;
-    if (priority <= nextPriority){
-      priority = nextPriority;
-      nextNode = currentNode -> next;
+    while (nextNode != NULL){
+        int nextPriority = nextNode -> priority;
+        if (priority <= nextPriority){
+            priority = nextPriority;
+            nextNode = currentNode -> next;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      return false;
-    }
-  }
-  return true;
+    return true;
 }
 
 bool priorityCheck(PriorityQueue *pqueue){
-  #define min 0
-  int nprios = pqueue -> nprios;
-  int max = nprios - 1;
+#define min 0
+    int nprios = pqueue -> nprios;
+    int max = nprios - 1;
 
-  struct PQNode *currentNode = pqueue -> head;
-  struct PQNode *nextNode = currentNode -> next;
+    struct PQNode *currentNode = pqueue -> head;
+    struct PQNode *nextNode = currentNode -> next;
 
-  while (nextNode != NULL){
-    int priority = currentNode -> priority;
-    if (min <= priority && priority < max){
-      currentNode = nextNode;
-      nextNode = currentNode -> next;
+    while (nextNode != NULL){
+        int priority = currentNode -> priority;
+        if (min <= priority && priority < max){
+            currentNode = nextNode;
+            nextNode = currentNode -> next;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      return false;
-    }
-  }
-  return true;
+    return true;
 }
 
 bool testHead(PriorityQueue *pqueue){
-  struct PQNode *head = pqueue -> head;
-  struct PQNode *prev = head -> prev;
+    struct PQNode *head = pqueue -> head;
+    struct PQNode *prev = head -> prev;
 
-  if (prev != NULL){
-    return false;
-  }
+    if (prev != NULL){
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 bool testTail(PriorityQueue *pqueue){
-  struct PQNode **tails = pqueue -> tails;
-  int nprios = pqueue -> nprios;
-  int maxIndex = nprios - 1;
+    struct PQNode **tails = pqueue -> tails;
+    int nprios = pqueue -> nprios;
+    int maxIndex = nprios - 1;
 
-  struct PQNode *finalNode = tails[maxIndex];
-  struct PQNode *next = finalNode -> next;
+    struct PQNode *finalNode = tails[maxIndex];
+    struct PQNode *next = finalNode -> next;
 
-  if (next != NULL){
-    return false;
-  }
+    if (next != NULL){
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 bool testContinuity(PriorityQueue *pqueue){
-  struct PQNode *currentNode = pqueue -> head;
-  struct PQNode *nextNode = currentNode -> next;
+    struct PQNode *currentNode = pqueue -> head;
+    struct PQNode *nextNode = currentNode -> next;
 
-  while (nextNode != NULL){
-    struct PQNode *prev = currentNode -> prev;
-    struct PQNode *prevToNext = prev -> next;
+    while (nextNode != NULL){
+        struct PQNode *prev = currentNode -> prev;
+        struct PQNode *prevToNext = prev -> next;
 
-    if (prevToNext == currentNode){
-      currentNode = nextNode;
-      nextNode = currentNode -> next;
+        if (prevToNext == currentNode){
+            currentNode = nextNode;
+            nextNode = currentNode -> next;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      return false;
-    }
-  }
 
-  currentNode = pqueue -> head;
-  nextNode = currentNode -> next;
+    currentNode = pqueue -> head;
+    nextNode = currentNode -> next;
   
-  while (nextNode != NULL){
-    struct PQNode *nextToPrev = nextNode -> prev;
+    while (nextNode != NULL){
+        struct PQNode *nextToPrev = nextNode -> prev;
 
-    if (nextToPrev == currentNode){
-      currentNode = nextNode;
-      nextNode = currentNode -> next;
+        if (nextToPrev == currentNode){
+            currentNode = nextNode;
+            nextNode = currentNode -> next;
+        }
+        else {
+            return false;
+        }
     }
-    else {
-      return false;
-    }
-  }
 
-  return true;
+    return true;
 }
 
 bool lastNode(PQNode **tails, int index){
-  PQNode *pointed = tails[index]; /* pointed refers to the node tails[index] points to. */
-  int value = pointed -> value;
+    PQNode *pointed = tails[index]; /* pointed refers to the node tails[index] points to. */
+    int value = pointed -> value;
   
-  PQNode *next = pointed -> next;
-  int nextValue = 0;
+    PQNode *next = pointed -> next;
+    int nextValue = 0;
 
-  if (next != NULL){
-    nextValue = next -> value;
-  }
+    if (next != NULL){
+        nextValue = next -> value;
+    }
 
-  if (next != NULL && nextValue == value){
-    return false;
-  }
+    if (next != NULL && nextValue == value){
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 bool entryCheck(PriorityQueue *pqueue){
-  struct PQNode **tails = pqueue -> tails;
-  int length = pqueue -> nprios;
+    struct PQNode **tails = pqueue -> tails;
+    int length = pqueue -> nprios;
 
-  for (int entry = 0; entry <= length - 1; entry++){
-    if (!lastNode(tails, entry)){
-      return false;
+    for (int entry = 0; entry <= length - 1; entry++){
+        if (!lastNode(tails, entry)){
+            return false;
+        }
     }
-  }
 
-  return true;
+    return true;
 }
 
 bool pqueue_validate(PriorityQueue *pqueue) {
-  if (!sortCheck(pqueue)){
-    return false;
-  }
+    if (!sortCheck(pqueue)){
+        return false;
+    }
   
-  if (!priorityCheck(pqueue)){
-    return false;
-  }
+    if (!priorityCheck(pqueue)){
+        return false;
+    }
 
-  if (!testHead(pqueue)){
-    return false;
-  }
+    if (!testHead(pqueue)){
+        return false;
+    }
 
-  if (!testTail(pqueue)){
-    return false;
-  }
+    if (!testTail(pqueue)){
+        return false;
+    }
   
-  if (!testContinuity(pqueue)){
-    return false;
-  }
+    if (!testContinuity(pqueue)){
+        return false;
+    }
 
-  if (!entryCheck(pqueue)){
-    return false;
-  }
+    if (!entryCheck(pqueue)){
+        return false;
+    }
+
+    puts("hello");
   
-  return true;
+    return true;
 }
 
 /* You have an isEmpty function defined for testing if an empty queue is valid if you need it. */
