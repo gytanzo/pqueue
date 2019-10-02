@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "priority_queue.h"
 
 /*
@@ -10,8 +11,27 @@
  *
  * nprios: The maximum number of priorities to support
  */
+
 PriorityQueue *pqueue_init(int nprios) {
-    return NULL;
+    struct PQNode **tails = (PQNode**) calloc(nprios, sizeof(PQNode*));
+    struct PQNode *head = (PQNode*) calloc(1, sizeof(PQNode*));
+    struct PriorityQueue *pqueue = (PriorityQueue*) calloc(1, sizeof(PriorityQueue*));
+    int npriosArg;
+
+    head = NULL;
+  
+    if (nprios <= 0) {
+        return NULL;
+    }
+    else {
+        npriosArg = nprios;
+    }
+  
+    pqueue -> head = head;
+    pqueue -> tails = tails;
+    pqueue -> nprios = npriosArg;
+  
+    return pqueue;
 }
 
 /*
@@ -32,6 +52,30 @@ void pqueue_free(PriorityQueue *pqueue) {
  * priority: the priority at which this value is to be inserted
  */
 void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
+    struct PQNode *node = (PQNode*) calloc(1, sizeof(PQNode));
+    struct PQNode **tails = pqueue -> tails;
+    struct PQNode *head = pqueue -> head;
+    int nprios = pqueue -> nprios;
+    
+    node -> value = value;
+    node -> priority = priority;
+
+    if (nprios == 1){
+        if (tails[0] == NULL){
+            node -> prev = NULL;
+            node -> next = NULL;
+            tails[0] = node;
+        }
+        else {
+            node -> prev = tails[0];
+            tails[0] -> next = node;
+            tails[0] = node;
+        }
+    }
+
+    if (head == NULL){
+        pqueue -> head = node;
+    }
 }
 
 /*
