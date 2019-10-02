@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     /* Check that init did something */
     if (pqueue == NULL) {
-        puts("failed");
+        puts("failed 1");
         return 1;
     }
 
@@ -33,31 +33,31 @@ int main(int argc, char *argv[])
 
     /* Verify nprios */
     if (pqueue->nprios != NPRIOS) {
-        puts("failed");
+        puts("failed 2");
         return 1;
     }
 
     /* Verify that head and tails[0] are equal */
     if (pqueue->head != pqueue->tails[0]) {
-        puts("failed");
+        puts("failed 3");
         return 1;
     }
 
     /* Verify that head points to a list node */
     if (pqueue->head == NULL) {
-        puts("failed");
+        puts("failed 4");
         return 1;
     }
 
     /* Verify the well-formedness of the list */
     if (pqueue->head->prev != NULL || pqueue->head->next != NULL) {
-        puts("failed");
+        puts("failed 5");
         return 1;
     }
 
     /* Check the value and priority stored on the head node */
     if (pqueue->head->priority != PRIO || pqueue->head->value != VALUE) {
-        puts("failed");
+        puts("failed 6");
         return 1;
     }
 
