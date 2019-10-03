@@ -12,7 +12,7 @@ LDFLAGS :=
 # specified by its executable name, which will be test_something.  This
 # corresponds to a C file named tests/something.c; see the rule below
 # for test_% for more information.
-TESTS := test_null test_insert_empty test_insert_priorities test_isEmpty test_npriosOne test_npriosTwo test_npriosTwoCaseTwo
+TESTS := test_null test_insert_empty test_insert_priorities test_isEmpty test_npriosOne test_npriosTwo test_npriosTwoCaseTwo test_npriosPlus test_npriosInverse test_npriosRandom
 
  # This is the first rule in the file, so it's what runs when you type
 # make with no arguments.  It will build list.o and validate.o, which
