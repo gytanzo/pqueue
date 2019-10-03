@@ -35,25 +35,26 @@ bool isEmpty(PriorityQueue *pqueue){
 }
 
 bool sortCheck(PriorityQueue *pqueue){
-    struct PQNode *currentNode = pqueue -> head;
-    struct PQNode *nextNode = currentNode -> next;
-    int priority = currentNode -> priority;
+    struct PQNode *start = pqueue -> head;
+    struct PQNode *node = start -> next;
 
-    while (nextNode != NULL){
-        int nextPriority = nextNode -> priority;
+    while(node != NULL){
+        int priority = start -> priority;
+        int nextPriority = node -> priority;
         if (priority <= nextPriority){
-            priority = nextPriority;
-            nextNode = currentNode -> next;
+            start = node;
+            node = start -> next;
         }
         else {
             return false;
         }
     }
+    
     return true;
 }
 
 bool priorityCheck(PriorityQueue *pqueue){
-#define min 0
+    int min = 0;
     int nprios = pqueue -> nprios;
     int max = nprios - 1;
 
@@ -62,12 +63,23 @@ bool priorityCheck(PriorityQueue *pqueue){
 
     while (nextNode != NULL){
         int priority = currentNode -> priority;
-        if (min <= priority && priority < max){
-            currentNode = nextNode;
-            nextNode = currentNode -> next;
+        if (min == max){
+            if (priority == min){
+                currentNode = nextNode;
+                nextNode = currentNode -> next;
+            }
+            else {
+                return false;
+            }
         }
         else {
-            return false;
+            if (min <= priority && priority <= max){
+                currentNode = nextNode;
+                nextNode = currentNode -> next;
+            }
+            else {
+                return false;
+            }
         }
     }
     return true;
@@ -105,11 +117,16 @@ bool testContinuity(PriorityQueue *pqueue){
 
     while (nextNode != NULL){
         struct PQNode *prev = currentNode -> prev;
-        struct PQNode *prevToNext = prev -> next;
+        if (prev != NULL){
+            struct PQNode *prevToNext = prev -> next;
 
-        if (prevToNext == currentNode){
-            currentNode = nextNode;
-            nextNode = currentNode -> next;
+            if (prevToNext == currentNode){
+                currentNode = nextNode;
+                nextNode = currentNode -> next;
+            }
+        }
+        else if (prev == NULL){
+            nextNode = NULL;
         }
         else {
             return false;
@@ -167,30 +184,34 @@ bool entryCheck(PriorityQueue *pqueue){
 
 bool pqueue_validate(PriorityQueue *pqueue) {
     if (!sortCheck(pqueue)){
+        puts("failed sortCheck");
         return false;
     }
   
     if (!priorityCheck(pqueue)){
+        puts("failed priorityCheck");
         return false;
     }
 
     if (!testHead(pqueue)){
+        puts("failed testHead");
         return false;
     }
 
     if (!testTail(pqueue)){
+        puts("failed testTail");
         return false;
     }
   
     if (!testContinuity(pqueue)){
+        puts("failed testContinuity");
         return false;
     }
 
     if (!entryCheck(pqueue)){
+        puts("failed entryCheck");
         return false;
     }
-
-    puts("hello");
   
     return true;
 }
