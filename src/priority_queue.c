@@ -21,6 +21,9 @@ PriorityQueue *pqueue_init(int nprios) {
     head = NULL;
   
     if (nprios <= 0) {
+        free(tails);
+        free(head);
+        free(pqueue);
         return NULL;
     }
     else {
@@ -51,6 +54,7 @@ void pqueue_free(PriorityQueue *pqueue) {
  * value: the opaque value being inserted into the queue
  * priority: the priority at which this value is to be inserted
  */
+
 void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
     struct PQNode *node = (PQNode*) calloc(1, sizeof(PQNode));
     struct PQNode **tails = pqueue -> tails;
@@ -64,13 +68,55 @@ void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
         if (tails[0] == NULL){
             node -> prev = NULL;
             node -> next = NULL;
-            tails[0] = node;
         }
         else {
             node -> prev = tails[0];
             tails[0] -> next = node;
-            tails[0] = node;
         }
+        
+        tails[0] = node;
+    }
+
+    else if (nprios == 2){
+        if (priority == 0 && tails[0] == NULL && tails[1] == NULL){
+            node -> prev = NULL;
+            node -> next = NULL;
+        }
+        else if (priority == 0 && tails[0] == NULL && tails[1] != NULL){
+            node -> prev = NULL;
+            node -> next = tails[1];
+            pqueue -> head = node;
+        }
+        else if (priority == 0 && tails[0] != NULL && tails[1] == NULL){
+            node -> prev = tails[0];
+            tails[0] -> next = node;
+            node -> next = NULL;
+        }
+        else if (priority == 0 && tails[0] != NULL && tails[1] != NULL){
+            node -> prev = tails[0];
+            tails[0] -> next = node;
+            node -> next = tails[1];
+            tails[1] -> prev = node;
+        }
+        else if (priority == 1 && tails[1] == NULL && tails[0] == NULL){
+            node -> next = NULL;
+            node -> prev = NULL;
+        }
+        else if (priority == 1 && tails[1] == NULL && tails[0] != NULL){
+            node -> prev = tails[0];
+            node -> next = NULL;
+            tails[0] -> next = node;
+        }
+        else if (priority == 1 && tails[1] != NULL && tails[0] == NULL){
+            node -> prev = tails[1];
+            tails[1] -> next = node;
+            node -> next = NULL;
+        }
+        else if (priority == 1 && tails[1] != NULL && tails[0] != NULL){
+            node -> prev = tails[1];
+            node -> next = NULL;
+        }
+        tails[priority] = node;
     }
 
     if (head == NULL){
