@@ -55,69 +55,91 @@ void pqueue_free(PriorityQueue *pqueue) {
  * priority: the priority at which this value is to be inserted
  */
 
+int neighbor(PQNode **tails, PQNode *node, PriorityQueue *pqueue, int status){
+    int nprios = pqueue -> nprios;
+    int length = nprios - 1;
+    int priority = node -> priority;
+    if (status == -1){
+        for (int entry = priority - 1; entry >= 0; entry--){
+            if (tails[entry] != NULL){
+                return entry;
+            }
+            else {
+                ;
+            }
+        }
+    }
+    if (status == 1){
+        for (int entry = priority + 1; entry <= length; entry++){
+            if (tails[entry] != NULL){
+                return entry;
+            }
+            else {
+                ;
+            }
+        }
+    }
+    return -1;
+}
+
+
 void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
     struct PQNode *node = (PQNode*) calloc(1, sizeof(PQNode));
     struct PQNode **tails = pqueue -> tails;
     struct PQNode *head = pqueue -> head;
-    int nprios = pqueue -> nprios;
     
     node -> value = value;
     node -> priority = priority;
 
-    if (nprios == 1){
-        if (tails[0] == NULL){
+    int prevArr = neighbor(tails, node, pqueue, -1);
+    int nextArr = neighbor(tails, node, pqueue, 1);
+    if (prevArr == -1 && nextArr == -1){
+        node -> next = NULL;
+        if (tails[priority] == NULL){
             node -> prev = NULL;
-            node -> next = NULL;
-        }
-        else {
-            node -> prev = tails[0];
-            tails[0] -> next = node;
-        }
-        
-        tails[0] = node;
-    }
-
-    else if (nprios == 2){
-        if (priority == 0 && tails[0] == NULL && tails[1] == NULL){
-            node -> prev = NULL;
-            node -> next = NULL;
-        }
-        else if (priority == 0 && tails[0] == NULL && tails[1] != NULL){
-            node -> prev = NULL;
-            node -> next = tails[1];
             pqueue -> head = node;
         }
-        else if (priority == 0 && tails[0] != NULL && tails[1] == NULL){
-            node -> prev = tails[0];
-            tails[0] -> next = node;
-            node -> next = NULL;
+        else {
+            node -> prev = tails[priority];
+            tails[priority] -> next = node;
         }
-        else if (priority == 0 && tails[0] != NULL && tails[1] != NULL){
-            node -> prev = tails[0];
-            tails[0] -> next = node;
-            node -> next = tails[1];
-            tails[1] -> prev = node;
-        }
-        else if (priority == 1 && tails[1] == NULL && tails[0] == NULL){
-            node -> next = NULL;
-            node -> prev = NULL;
-        }
-        else if (priority == 1 && tails[1] == NULL && tails[0] != NULL){
-            node -> prev = tails[0];
-            node -> next = NULL;
-            tails[0] -> next = node;
-        }
-        else if (priority == 1 && tails[1] != NULL && tails[0] == NULL){
-            node -> prev = tails[1];
-            tails[1] -> next = node;
-            node -> next = NULL;
-        }
-        else if (priority == 1 && tails[1] != NULL && tails[0] != NULL){
-            node -> prev = tails[1];
-            node -> next = NULL;
-        }
-        tails[priority] = node;
     }
+    else if (prevArr != -1 && nextArr == -1){
+        node -> next = NULL;
+        if (tails[priority] == NULL){
+            node -> prev = tails[prevArr];
+            tails[prevArr] -> next = node;
+        }
+        else {
+            node -> prev = tails[priority];
+            tails[priority] -> next = node;
+        }
+    }
+    else if (prevArr == -1 && nextArr != -1){
+        if (tails[priority] == NULL){
+            node -> prev = NULL;
+            pqueue -> head = node;
+        }
+        else {
+            node -> prev = tails[priority];
+            tails[priority] -> next = node;
+        }
+        node -> next = tails[nextArr];
+        tails[nextArr] -> prev = node;
+    }
+    else {
+        if (tails[priority] == NULL){
+            node -> prev = tails[prevArr];
+            tails[prevArr] -> next = node;
+        }
+        else {
+            node -> prev = tails[priority];
+            tails[priority] -> next = node;
+        }
+        node -> next = tails[nextArr];
+        tails[nextArr] -> prev = node;
+    }
+    tails[priority] = node;
 
     if (head == NULL){
         pqueue -> head = node;
