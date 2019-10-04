@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "priority_queue.h"
+#include "validate.h"
 
 /*
  * Create a new PriorityQueue structure and return it.
@@ -82,7 +83,6 @@ int neighbor(PQNode **tails, PQNode *node, PriorityQueue *pqueue, int status){
     return -1;
 }
 
-
 void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
     struct PQNode *node = (PQNode*) calloc(1, sizeof(PQNode));
     struct PQNode **tails = pqueue -> tails;
@@ -124,8 +124,15 @@ void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
             node -> prev = tails[priority];
             tails[priority] -> next = node;
         }
-        node -> next = tails[nextArr];
-        tails[nextArr] -> prev = node;
+        
+        if (tails[nextArr] -> prev != NULL && tails[nextArr] -> prev -> priority == nextArr){
+            node -> next = tails[nextArr] -> prev;
+            tails[nextArr] -> prev -> prev = node;
+        }
+        else {
+            node -> next = tails[nextArr];
+            tails[nextArr] -> prev = node;
+        }
     }
     else {
         if (tails[priority] == NULL){
@@ -150,12 +157,21 @@ void pqueue_insert(PriorityQueue *pqueue, int value, int priority) {
  * Return the head queue node without removing it.
  */
 PQNode *pqueue_peek(PriorityQueue *pqueue) {
-    return NULL;
+    struct PQNode *head = pqueue -> head;
+    return head;
 }
 
 /*
  * Remove and return the head queue node.
  */
 PQNode *pqueue_get(PriorityQueue *pqueue) {
-    return NULL;
+    struct PQNode *head = pqueue -> head;
+    struct PQNode *newHead = pqueue -> head -> next;
+    if (isEmpty(pqueue)){
+        return NULL;
+    }
+
+    pqueue -> head = newHead;
+    pqueue -> head -> prev = NULL;
+    return head;
 }
