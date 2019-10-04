@@ -41,28 +41,35 @@ bool test(PriorityQueue *pqueue, PQNode *left, PQNode *center, PQNode *right, in
 int main(int argc, char *argv[]){
     PriorityQueue *pqueue = pqueue_init(NPRIOS);
 
-    pqueue_insert(pqueue, VALUE8, PRIO4);
+    pqueue_insert(pqueue, VALUE8, PRIO4); /* nodeTwo */
 
-    pqueue_insert(pqueue, VALUE7, PRIO4);
+    pqueue_insert(pqueue, VALUE7, PRIO4); /* nodeThree */
 
-    pqueue_insert(pqueue, VALUE6, PRIO3);
+    pqueue_insert(pqueue, VALUE6, PRIO3); /* nodeOne */
 
     struct PQNode *nodeOne = pqueue -> head;
     struct PQNode *nodeTwo = nodeOne -> next;
     struct PQNode *nodeThree = nodeTwo -> next;
-
-    if (!test(pqueue, NULL, nodeOne, nodeTwo, PRIO4, VALUE8)){
+    
+    if (!test(pqueue, NULL, nodeOne, nodeTwo, PRIO3, VALUE6)){
         puts("failed 1");
         return 1;
     }
 
-    if (!test(pqueue, nodeOne, nodeTwo, nodeThree, PRIO4, VALUE7)){
+    if (!test(pqueue, nodeOne, nodeTwo, nodeThree, PRIO4, VALUE8)){
         puts("failed 2");
         return 1;
     }
 
-    if (!test(pqueue, nodeTwo, nodeThree, NULL, PRIO3, VALUE6)){
+
+    if (!test(pqueue, nodeTwo, nodeThree, NULL, PRIO4, VALUE7)){
         puts("failed 3");
+        return 1;
+    }
+
+    /* Validate */
+    if (!pqueue_validate(pqueue)){
+        puts("failed 4");
         return 1;
     }
     
